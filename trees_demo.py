@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys,os
 import operator
+import treePlotter_demo
 from math import log
 
 def calcShannonEnt(dataSet):  #信息熵的计算
@@ -76,12 +77,39 @@ def createDataSet():
     return dataSet,labels
 
 
+def classify(inputTree,featLabels,testVec):
+    firstStr = inputTree.keys()[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]).__name__=='dict':
+                classLabel = classify(secondDict[key],featLabels,testVec)
+            else:
+                classLabel = secondDict[key]
+
+    return classLabel
+
+
+
 def main():   #主程序清单
     myDat,labels = createDataSet()
     print calcShannonEnt(myDat)
     print chooseBestFeatureToSplit(myDat)
-    myTree = createTree(myDat,labels)
+    #
+    myTree = treePlotter_demo.retrieveTree(0)
+
     print myTree
+    classify(myTree,labels,[1,0])
+    classify(myTree,labels,[1,1])
+
+    #分类隐形眼镜
+    fr = open('lenses.txt')
+    lenses = [inst.strip().split('\t') for inst in fr.readlines()]
+    lensesLabels = ['age','prescipt','astigmatic','tearRate']
+    lensesTree = createTree(lenses,lensesLabels)
+    print lensesTree
+    treePlotter_demo.createPlot(lensesTree)
 if __name__=="__main__":
      main()
 

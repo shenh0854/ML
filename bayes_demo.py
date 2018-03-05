@@ -26,7 +26,7 @@ def createVocabList(dataSet):           #创建字典，字典内为所有出现
 
 def setOfWords2Vec(vocabList,inputSet):        #对每个文档，统计其中是否出现过字典内的词，有则标注1，没有标注0
                                                #形成一个长度等于字典词数的向量，根据这一向量对文档进行分类
-    returnVec = [0]*len(vocabList)
+    returnVec = [0]*len(vocabList)   #生成list的一种方式，个数乘以长度
     for word in inputSet:
         if word in vocabList:
             returnVec[vocabList.index(word)] = 1
